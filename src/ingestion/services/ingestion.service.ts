@@ -29,7 +29,7 @@ export class IngestionService {
 
         // Save the job to get ID
         const savedJob = await this.ingestionRepository.save(ingestionJob);
-        
+
         // Update document status to reflect pending ingestion
         await this.updateDocumentStatus(savedJob);
 
@@ -44,7 +44,7 @@ export class IngestionService {
             // Update status to processing
             job.status = IngestionStatus.PROCESSING;
             await this.ingestionRepository.save(job);
-            
+
             // Update document status to processing
             await this.updateDocumentStatus(job);
 
@@ -66,7 +66,7 @@ export class IngestionService {
                     }
 
                     await this.ingestionRepository.save(job);
-                    
+
                     // Update document status based on job status
                     await this.updateDocumentStatus(job);
                 } catch (error) {
@@ -89,7 +89,7 @@ export class IngestionService {
             job.retryCount += 1;
             job.status = IngestionStatus.PENDING;
             await this.ingestionRepository.save(job);
-            
+
             // Update document status to pending (for retry)
             await this.updateDocumentStatus(job);
 
@@ -103,7 +103,7 @@ export class IngestionService {
             // Mark as failed if max retries reached
             job.status = IngestionStatus.FAILED;
             await this.ingestionRepository.save(job);
-            
+
             // Update document status to failed
             await this.updateDocumentStatus(job);
         }

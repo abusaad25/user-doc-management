@@ -27,4 +27,4 @@ import databaseConfig from './config/database.config';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

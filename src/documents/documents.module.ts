@@ -23,4 +23,4 @@ try {
   controllers: [DocumentsController],
   providers: [DocumentsService],
 })
-export class DocumentsModule {}
+export class DocumentsModule { }

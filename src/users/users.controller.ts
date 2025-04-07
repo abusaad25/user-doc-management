@@ -9,7 +9,7 @@ import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 @Controller('users')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Get()
   @Roles(Role.ADMIN)

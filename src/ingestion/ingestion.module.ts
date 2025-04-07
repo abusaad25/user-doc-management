@@ -17,4 +17,4 @@ import { DocumentsModule } from '../documents/documents.module';
   providers: [IngestionService, PythonApiService],
   exports: [IngestionService],
 })
-export class IngestionModule {}
+export class IngestionModule { }

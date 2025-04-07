@@ -14,7 +14,7 @@ export class DocumentsService {
   constructor(
     @InjectRepository(Document)
     private documentsRepository: Repository<Document>,
-  ) {}
+  ) { }
 
   async create(
     createDocumentDto: CreateDocumentDto,
@@ -38,16 +38,16 @@ export class DocumentsService {
     if (user.role === Role.ADMIN) {
       return this.documentsRepository.find({ relations: ['owner'] });
     }
-    
-    return this.documentsRepository.find({ 
+
+    return this.documentsRepository.find({
       where: { owner: { id: user.id } },
       relations: ['owner'],
     });
   }
 
   async findOne(id: string, user: User): Promise<Document> {
-    const document = await this.documentsRepository.findOne({ 
-      where: { id },  
+    const document = await this.documentsRepository.findOne({
+      where: { id },
       relations: ['owner'],
     });
 
@@ -70,12 +70,12 @@ export class DocumentsService {
     user: User,
   ): Promise<Document> {
     const document = await this.findOne(id, user);
-    
+
     // Additional check for editors
     if (user.role === Role.VIEWER) {
       throw new ForbiddenException('Viewers can only view documents');
     }
-    
+
     // Update document with new data
     const updatedDocument = {
       ...document,
@@ -87,25 +87,25 @@ export class DocumentsService {
 
   async remove(id: string, user: User): Promise<void> {
     const document = await this.findOne(id, user);
-    
+
     // Only admins or document owners can delete
     if (user.role !== Role.ADMIN && document.owner.id !== user.id) {
       throw new ForbiddenException('You cannot delete this document');
     }
-    
+
     // Delete file from filesystem
     try {
       fs.unlinkSync(document.filePath);
     } catch (error) {
       console.error('Error deleting file:', error);
     }
-    
+
     await this.documentsRepository.remove(document);
   }
 
-  async download(id: string, user: User): Promise<{path: string, filename: string}> {
+  async download(id: string, user: User): Promise<{ path: string, filename: string }> {
     const document = await this.findOne(id, user);
-    
+
     return {
       path: document.filePath,
       filename: document.fileName
@@ -114,32 +114,32 @@ export class DocumentsService {
 
   // src/documents/documents.service.ts (add these methods)
 
-async updateDocumentProcessingStatus(id: string, status: DocumentProcessingStatus): Promise<Document> {
-  const document = await this.documentsRepository.findOne({ where: { id } });
-  
-  if (!document) {
-    throw new NotFoundException(`Document with ID ${id} not found`);
-  }
-  
-  document.processingStatus = status;
-  return this.documentsRepository.save(document);
-}
+  async updateDocumentProcessingStatus(id: string, status: DocumentProcessingStatus): Promise<Document> {
+    const document = await this.documentsRepository.findOne({ where: { id } });
 
-async getDocumentWithIngestionJobs(id: string, user: User): Promise<Document> {
-  const document = await this.documentsRepository.findOne({ 
-    where: { id },
-    relations: ['owner', 'ingestionJobs'],
-  });
+    if (!document) {
+      throw new NotFoundException(`Document with ID ${id} not found`);
+    }
 
-  if (!document) {
-    throw new NotFoundException(`Document with ID ${id} not found`);
+    document.processingStatus = status;
+    return this.documentsRepository.save(document);
   }
 
-  // Check user authorization
-  if (user.role !== Role.ADMIN && document.owner.id !== user.id) {
-    throw new ForbiddenException('Access denied');
-  }
+  async getDocumentWithIngestionJobs(id: string, user: User): Promise<Document> {
+    const document = await this.documentsRepository.findOne({
+      where: { id },
+      relations: ['owner', 'ingestionJobs'],
+    });
 
-  return document;
-}
+    if (!document) {
+      throw new NotFoundException(`Document with ID ${id} not found`);
+    }
+
+    // Check user authorization
+    if (user.role !== Role.ADMIN && document.owner.id !== user.id) {
+      throw new ForbiddenException('Access denied');
+    }
+
+    return document;
+  }
 }

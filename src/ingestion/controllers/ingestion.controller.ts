@@ -14,7 +14,7 @@ export class IngestionController {
   constructor(
     private readonly ingestionService: IngestionService,
     private readonly documentsService: DocumentsService,
-  ) {}
+  ) { }
 
   @Post('trigger')
   @Roles(Role.ADMIN, Role.EDITOR)
@@ -24,13 +24,13 @@ export class IngestionController {
   ) {
     // First, get the document
     const document = await this.documentsService.findOne(
-      createIngestionDto.documentId, 
+      createIngestionDto.documentId,
       req.user
     );
-    
+
     // Then, trigger ingestion
     const job = await this.ingestionService.triggerIngestion(document, req.user);
-    
+
     return {
       jobId: job.id,
       documentId: document.id,
