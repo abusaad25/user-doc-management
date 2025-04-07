@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as fs from 'fs';
 import * as path from 'path';
-import { Document } from './entities/document.entity';
+import { Document, DocumentProcessingStatus } from './entities/document.entity';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { UpdateDocumentDto } from './dto/update-document.dto';
 import { User } from '../users/entities/user.entity';
@@ -111,4 +111,35 @@ export class DocumentsService {
       filename: document.fileName
     };
   }
+
+  // src/documents/documents.service.ts (add these methods)
+
+async updateDocumentProcessingStatus(id: string, status: DocumentProcessingStatus): Promise<Document> {
+  const document = await this.documentsRepository.findOne({ where: { id } });
+  
+  if (!document) {
+    throw new NotFoundException(`Document with ID ${id} not found`);
+  }
+  
+  document.processingStatus = status;
+  return this.documentsRepository.save(document);
+}
+
+async getDocumentWithIngestionJobs(id: string, user: User): Promise<Document> {
+  const document = await this.documentsRepository.findOne({ 
+    where: { id },
+    relations: ['owner', 'ingestionJobs'],
+  });
+
+  if (!document) {
+    throw new NotFoundException(`Document with ID ${id} not found`);
+  }
+
+  // Check user authorization
+  if (user.role !== Role.ADMIN && document.owner.id !== user.id) {
+    throw new ForbiddenException('Access denied');
+  }
+
+  return document;
+}
 }

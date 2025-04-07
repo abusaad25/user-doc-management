@@ -1,4 +1,3 @@
-// src/app.module.ts
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -7,6 +6,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { DocumentsModule } from './documents/documents.module';
+import { IngestionModule } from './ingestion/ingestion.module';
 import databaseConfig from './config/database.config';
 
 @Module({
@@ -22,6 +22,7 @@ import databaseConfig from './config/database.config';
     UsersModule,
     AuthModule,
     DocumentsModule,
+    IngestionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

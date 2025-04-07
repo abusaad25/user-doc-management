@@ -1,5 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
+import { IngestionJob } from '../../ingestion/entities/ingestion-status.entity';
+
+export enum DocumentProcessingStatus {
+  NOT_PROCESSED = 'not_processed',
+  PROCESSING = 'processing',
+  PROCESSED = 'processed',
+  FAILED = 'failed',
+}
 
 @Entity()
 export class Document {
@@ -24,8 +32,18 @@ export class Document {
   @Column()
   mimeType: string;
 
+  @Column({
+    type: 'enum',
+    enum: DocumentProcessingStatus,
+    default: DocumentProcessingStatus.NOT_PROCESSED,
+  })
+  processingStatus: DocumentProcessingStatus;
+
   @ManyToOne(() => User, user => user.documents)
   owner: User;
+
+  @OneToMany(() => IngestionJob, job => job.document)
+  ingestionJobs: IngestionJob[];
 
   @CreateDateColumn()
   createdAt: Date;
