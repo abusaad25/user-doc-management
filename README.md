@@ -30,23 +30,15 @@ This project is a full-featured backend built using NestJS. It includes:
 ---
 
 ## 🏗️ Architecture
-
-Client (Frontend)
-     |
-     | HTTP Requests (REST API)
-     v
-NestJS Backend
- ├── Auth Module (Login/Register/JWT)
- ├── Users Module (RBAC)
- ├── Documents Module (CRUD)
- └── PostgreSQL (TypeORM)
-
  
-- Modular design: Each feature in its own module
-- Middleware & Interceptors for request validation and logging
-- Guards for protecting routes based on user roles
+Our NestJS application follows a clean, modular architecture centered around domain-driven design principles. The core consists of three primary domains: authentication, document management, and ingestion processing. Each domain is implemented as a separate NestJS module with its own controllers, services, and repositories.
+The application follows a layered architecture:
+Controllers handle HTTP requests and route them to appropriate services
+Services contain the business logic and orchestrate operations
+Repositories (via TypeORM) handle data persistence
+DTOs and entities maintain type safety throughout the application
+For cross-cutting concerns, we use NestJS pipes, guards, and interceptors. For example, we have a global exception filter that standardizes error responses and a logging interceptor that tracks request durations.
 
----
 
 ## 📊 Entity-Relationship Diagram
 
