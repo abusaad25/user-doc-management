@@ -16,13 +16,19 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../users/entities/role.enum';
 import { User } from 'src/users/entities/user.entity';
+import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
+
+@ApiTags('documents')
+@ApiBearerAuth()
 @Controller('documents')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class DocumentsController {
   constructor(private readonly documentsService: DocumentsService) { }
 
   @Post()
+  @ApiOperation({ summary: 'Upload a document' })
+  @ApiResponse({ status: 201, description: 'Document created' })
   @Roles(Role.ADMIN, Role.EDITOR)
   @UseInterceptors(
     FileInterceptor('file', {
@@ -45,18 +51,24 @@ export class DocumentsController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get all documents for user' })
+  @ApiResponse({ status: 200, description: 'Documents retrieved' })
   @Roles(Role.ADMIN, Role.EDITOR, Role.VIEWER)
   findAll(@Req() req: Request) {
     return this.documentsService.findAll(req.user);
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get a specific document by ID' })
+  @ApiResponse({ status: 200, description: 'Document retrieved' })
   @Roles(Role.ADMIN, Role.EDITOR, Role.VIEWER)
   findOne(@Param('id') id: string, @Req() req: Request) {
     return this.documentsService.findOne(id, req.user);
   }
 
   @Get(':id/download')
+  @ApiOperation({ summary: 'Download a document' })
+  @ApiResponse({ status: 200, description: 'Document stream returned' })
   @Roles(Role.ADMIN, Role.EDITOR, Role.VIEWER)
   async download(
     @Param('id') id: string,
@@ -74,6 +86,8 @@ export class DocumentsController {
   }
 
   @Put(':id')
+  @ApiOperation({ summary: 'Update a document' })
+  @ApiResponse({ status: 200, description: 'Document updated' })
   @Roles(Role.ADMIN, Role.EDITOR)
   update(
     @Param('id') id: string,
@@ -84,6 +98,8 @@ export class DocumentsController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete a document' })
+  @ApiResponse({ status: 200, description: 'Document deleted' })
   @Roles(Role.ADMIN)
   remove(@Param('id') id: string, @Req() req: Request) {
     return this.documentsService.remove(id, req.user);
