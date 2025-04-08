@@ -1,21 +1,18 @@
 # 🧾 Project Title
 
-_A brief one-liner about your project (e.g., “Document Management System with RBAC using NestJS and PostgreSQL”)_
+Document Management System with RBAC using NestJS and PostgreSQL
 
 ---
 
 ## 📚 Table of Contents
 
 - [About the Project](#about-the-project)
-- [Architecture](#architecture)
 - [Entity-Relationship Diagram](#entity-relationship-diagram)
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
 - [Running the Application](#running-the-application)
 - [API Endpoints](#api-endpoints)
 - [Folder Structure](#folder-structure)
-- [Contributing](#contributing)
-- [License](#license)
 
 ---
 
