@@ -45,7 +45,7 @@ export class DocumentsController {
   create(
     @Body() createDocumentDto: CreateDocumentDto,
     @UploadedFile() file: Express.Multer.File,
-    @Req() req: Request,
+    @Req() req: any,
   ) {
     return this.documentsService.create(createDocumentDto, file, req.user);
   }
@@ -54,7 +54,7 @@ export class DocumentsController {
   @ApiOperation({ summary: 'Get all documents for user' })
   @ApiResponse({ status: 200, description: 'Documents retrieved' })
   @Roles(Role.ADMIN, Role.EDITOR, Role.VIEWER)
-  findAll(@Req() req: Request) {
+  findAll(@Req() req: any) {
     return this.documentsService.findAll(req.user);
   }
 
@@ -62,7 +62,7 @@ export class DocumentsController {
   @ApiOperation({ summary: 'Get a specific document by ID' })
   @ApiResponse({ status: 200, description: 'Document retrieved' })
   @Roles(Role.ADMIN, Role.EDITOR, Role.VIEWER)
-  findOne(@Param('id') id: string, @Req() req: Request) {
+  findOne(@Param('id') id: string, @Req() req: any) {
     return this.documentsService.findOne(id, req.user);
   }
 
@@ -72,7 +72,7 @@ export class DocumentsController {
   @Roles(Role.ADMIN, Role.EDITOR, Role.VIEWER)
   async download(
     @Param('id') id: string,
-    @Req() req: Request,
+    @Req() req: any,
     @Res({ passthrough: true }) res: Response,
   ) {
     const { path, filename } = await this.documentsService.download(id, req.user);
@@ -92,7 +92,7 @@ export class DocumentsController {
   update(
     @Param('id') id: string,
     @Body() updateDocumentDto: UpdateDocumentDto,
-    @Req() req: Request,
+    @Req() req: any,
   ) {
     return this.documentsService.update(id, updateDocumentDto, req.user);
   }
@@ -101,7 +101,7 @@ export class DocumentsController {
   @ApiOperation({ summary: 'Delete a document' })
   @ApiResponse({ status: 200, description: 'Document deleted' })
   @Roles(Role.ADMIN)
-  remove(@Param('id') id: string, @Req() req: Request) {
+  remove(@Param('id') id: string, @Req() req: any) {
     return this.documentsService.remove(id, req.user);
   }
 }

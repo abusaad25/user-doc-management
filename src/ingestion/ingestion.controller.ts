@@ -27,7 +27,7 @@ export class IngestionController {
   @ApiResponse({ status: 201, description: 'Ingestion job triggered' })
   async triggerIngestion(
     @Body() createIngestionDto: CreateIngestionDto,
-    @Req() req: Request,
+    @Req() req: any,
   ) {
     // First, get the document
     const document = await this.documentsService.findOne(
