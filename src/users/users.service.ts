@@ -16,17 +16,14 @@ export class UsersService {
   async create(createUserDto: CreateUserDto): Promise<User> {
     const { email, password, firstName, lastName } = createUserDto;
 
-    // Check if user already exists
     const existingUser = await this.usersRepository.findOne({ where: { email } });
     if (existingUser) {
       throw new ConflictException('User with this email already exists');
     }
 
     try {
-      // Hash password
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Create new user
       const user = this.usersRepository.create({
         email,
         password: hashedPassword,
@@ -55,7 +52,11 @@ export class UsersService {
   }
 
   async findByEmail(email: string): Promise<User> {
-    return this.usersRepository.findOne({ where: { email } });
+    const user = await this.usersRepository.findOne({ where: { email } });
+    if (!user) {
+      throw new NotFoundException(`User with email: ${email} not found`);
+    }
+    return user;
   }
 
   async updateRole(id: string, updateUserRoleDto: UpdateUserRoleDto): Promise<User> {

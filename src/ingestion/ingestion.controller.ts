@@ -1,11 +1,11 @@
 import { Controller, Post, Get, Param, Body, UseGuards, Req } from '@nestjs/common';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../../auth/guards/roles.guard';
-import { Roles } from '../../auth/decorators/roles.decorator';
-import { Role } from '../../users/entities/role.enum';
-import { IngestionService } from '../services/ingestion.service';
-import { CreateIngestionDto } from '../dto/create-ingestion.dto';
-import { DocumentsService } from '../../documents/documents.service';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { Role } from '../users/entities/role.enum';
+import { IngestionService } from './services/ingestion.service';
+import { CreateIngestionDto } from './dto/create-ingestion.dto';
+import { DocumentsService } from '../documents/documents.service';
 import { Request } from 'express';
 
 @Controller('ingestion')

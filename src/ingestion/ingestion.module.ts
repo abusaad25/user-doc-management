@@ -4,7 +4,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { IngestionJob } from './entities/ingestion-status.entity';
 import { IngestionService } from './services/ingestion.service';
 import { PythonApiService } from './services/python-api.service';
-import { IngestionController } from './controllers/ingestion.controller';
+import { IngestionController } from './ingestion.controller';
 import { DocumentsModule } from '../documents/documents.module';
 
 @Module({

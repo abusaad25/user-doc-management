@@ -7,7 +7,7 @@ import { Role } from './entities/role.enum';
 import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 
 @Controller('users')
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards( RolesGuard, JwtAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
