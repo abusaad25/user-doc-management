@@ -8,9 +8,9 @@ import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 
+@Controller('users')
 @ApiTags('users')
 @ApiBearerAuth()
-@Controller('users')
 @UseGuards(RolesGuard, JwtAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }

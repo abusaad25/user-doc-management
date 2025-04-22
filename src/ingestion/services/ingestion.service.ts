@@ -20,17 +20,14 @@ export class IngestionService {
     ) { }
 
     async triggerIngestion(document: Document, user: any): Promise<IngestionJob> {
-        // Create new ingestion job
         const ingestionJob = this.ingestionRepository.create({
             document,
             status: IngestionStatus.PENDING,
             retryCount: 0,
         });
 
-        // Save the job to get ID
         const savedJob = await this.ingestionRepository.save(ingestionJob);
 
-        // Update document status to reflect pending ingestion
         await this.updateDocumentStatus(savedJob);
 
         // Start processing asynchronously
@@ -41,23 +38,19 @@ export class IngestionService {
 
     private async processIngestion(job: IngestionJob): Promise<void> {
         try {
-            // Update status to processing
             job.status = IngestionStatus.PROCESSING;
             await this.ingestionRepository.save(job);
 
-            // Update document status to processing
             await this.updateDocumentStatus(job);
 
-            // Call the Python API (mocked)
-            const processResponse = await this.pythonApiService.processDocument(job.document);
+            // Call the Python Service
+            await this.pythonApiService.processDocument(job.document);
 
-            // Simulate async processing (in a real app, we'd wait for a callback or poll)
             setTimeout(async () => {
                 try {
                     // Check status with Python service
                     const result = await this.pythonApiService.checkStatus(job.id);
 
-                    // Update job with result
                     job.status = result.status;
                     job.errorMessage = result.errorMessage ?? "";
 
@@ -67,13 +60,12 @@ export class IngestionService {
 
                     await this.ingestionRepository.save(job);
 
-                    // Update document status based on job status
                     await this.updateDocumentStatus(job);
                 } catch (error) {
                     this.logger.error(`Error checking ingestion status: ${error.message}`);
                     await this.handleIngestionError(job, error.message);
                 }
-            }, 5000); // Simulate 5 second processing time
+            }, 5000); // 5 second processing time
 
         } catch (error) {
             this.logger.error(`Error triggering ingestion: ${error.message}`);
@@ -90,7 +82,6 @@ export class IngestionService {
             job.status = IngestionStatus.PENDING;
             await this.ingestionRepository.save(job);
 
-            // Update document status to pending (for retry)
             await this.updateDocumentStatus(job);
 
             this.logger.log(`Scheduling retry ${job.retryCount} for job ${job.id}`);
@@ -100,17 +91,14 @@ export class IngestionService {
                 this.processIngestion(job);
             }, 1000 * Math.pow(2, job.retryCount));
         } else {
-            // Mark as failed if max retries reached
             job.status = IngestionStatus.FAILED;
             await this.ingestionRepository.save(job);
 
-            // Update document status to failed
             await this.updateDocumentStatus(job);
         }
     }
 
     private async updateDocumentStatus(job: IngestionJob): Promise<void> {
-        // Get document processing status based on job status
         let processingStatus: DocumentProcessingStatus;
 
         switch (job.status) {

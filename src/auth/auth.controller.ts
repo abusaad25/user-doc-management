@@ -5,9 +5,8 @@ import { LoginUserDto } from '../users/dto/login-user.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
-
-@ApiTags('auth')
 @Controller('auth')
+@ApiTags('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
@@ -26,14 +25,12 @@ export class AuthController {
     return this.authService.login(loginUserDto);
   }
 
-  @Post('logout')
-  @ApiOperation({ summary: 'Logout the user' })
-  @ApiResponse({ status: 200, description: 'User logged out' })
-  @UseGuards(JwtAuthGuard)
-  @HttpCode(HttpStatus.OK)
-  async logout() {
-    // Since JWT is stateless, there's no server-side logout
-    // Client should discard the token
-    return { message: 'Logged out successfully' };
-  }
+  // @Post('logout')
+  // @ApiOperation({ summary: 'Logout the user' })
+  // @ApiResponse({ status: 200, description: 'User logged out' })
+  // @UseGuards(JwtAuthGuard)
+  // @HttpCode(HttpStatus.OK)
+  // async logout() {
+  //   return { message: 'Logged out successfully' };
+  // }
 }
